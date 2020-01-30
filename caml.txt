@@ -1,0 +1,269 @@
+let x = 2 in (x*x);;
+
+let f = function x -> if x <> 0. then 1./.x else failwith "division par 0";;
+
+let f = function x ->
+	let a  = x*x/2 in
+		if x >= 0
+		then a+1
+		else a-1;;
+
+let f = function x ->
+	let a = x*.x/.2. in
+		if x = 0.
+		then 0.
+		else
+			if x > 0.
+			then a+.1.
+			else a-.1.;;
+
+let cube = function x ->
+	let carre = function x -> x*x
+		in x * carre x;;
+
+let f = function x ->
+	let carre = function x -> x*x
+	in let a = (carre x)/2
+		in (a+1)*(a-1);;
+
+"Fait la somme des valeurs de 1 à n."
+"Ne pas oublier le mot clé rec pour une fonction récursive"
+let somme = function n ->
+	if n <= 0 then failwith "indefini"
+	else let rec som = function n ->
+						if n=1 then 1
+						else n + som (n-1)
+			in som (n);;
+
+"Fonction sans nom"
+(function x -> x+1) 7;;
+
+"On passe une fonction en paramètre"
+"Tzero = (int -> 'a) -> 'a"
+let zero = function f -> (f 0);;
+zero (function x -> x+1);;
+
+"Fonction qui prend en argument un entier n, et retourne
+comme résultat une fonction qui ajoute n à son argument"
+let ajoute = function n ->
+	(function p -> p+n);;
+"Fonction qui à p associe p+2"
+ajoute 2;;
+"Applique 5 sur le résultat de ajoute 10"
+(ajoute 10) 5;;
+
+"Fonction à deux arguments"
+"(Prend un paramètre et retourne une fonction à un paramètre)"
+let pow = function a ->
+	(function b -> a**b);;
+
+"Si on donne un seul argument : application partielle"
+"Si on donne tous les arguments : application totale"
+
+let delongueur = function n ->
+	function ch ->
+		String.length ch = n;;
+"true"
+delongueur 4 "test";;
+"false"
+delongueur 5 "test";;
+
+"Tmax = 'a -> ('a -> 'a)"
+let max = function a ->
+	(function b -> 
+		if a<b then b
+		else a);;
+"Application partielle"
+max 1.;;
+"Application totale"
+max 5 2;;
+
+let f = function p -> p
+"équivalent à"
+let f p = p;;
+
+"Donc on a :"
+
+let delongueur n ch = (String.length ch = n);;
+let max n p = if n>p then n else p;;
+let pow a b = a**b;;
+
+let rec fact = function n ->
+	if n = 0 then 1
+	else n*fact (n-1);;
+
+=======================================
+
+(x, true) filtre ("toto", true) et créé la liaison (x, "toto")
+(_, true) filtre ("toto", true) mais ne créé aucune liaison
+
+"A gauche on a les filtres"
+"On s'arrête sur le premier filtre correct rencontré"
+"(Donc attention à l'ordre des filtres)"
+let f = function
+	0 -> (-1)
+	| 1 -> 0
+	| x -> x*x;;
+
+"Un filtrage doit couvrir toutes les valeurs pour ne pas avoir de warning"
+
+
+let f = function
+	((1, true), _) -> 10
+	| ((2, false), x) -> 3
+	| (x, "aa") -> fst x
+	| _ -> 2
+;;
+
+let rec fact = function
+	0 -> 1
+	| n -> n* fact(n-1)
+;;
+
+let f = function x ->
+	let x2 = x*x
+	in match x2 with
+		1 -> 0
+		| 2 -> 1
+		| _ -> x2
+;;
+
+let minPaire = function p ->
+	if fst p < snd p then
+		fst p
+	else
+		snd p
+;;
+
+"devient"
+
+let minPaire = function
+	(x,y) -> if x<y then x else y
+;;
+
+"Uniquement si un seul argument"
+let minPaire (x,y) = if x<y then x else y;;
+
+let prem = function (x,y,z) -> x;;
+let prem = function (x,_,_) -> x;;
+let prem (x,y,z) = x;;
+let sec (_,y,_) = y;;
+let norme (x,y,z) = x*x + y*y + z*z;;
+
+"Notation curryfiée"
+let min = function x -> function y -> if x<y then x else y;;
+
+"Une liste a des éléments d'un même type"
+[1; 2];;
+["toto";"titi"];;
+[]
+
+let vide = function
+	[] -> true
+	| _ -> false
+;;
+
+let singleton = function
+	x::[] -> true
+	| _ -> false
+;;
+
+let tete = function
+	x::r -> x
+	| [] -> failwith "error"
+;;
+
+let queue = function
+	x::r -> r
+	| [] -> failwith "error"
+;;
+
+let deuxieme = function
+	x::r::t -> r
+	| _ -> failwith "error"
+;;
+
+let rec longueur = function
+	[] -> 0
+	| x::[] -> 1
+	| x::r -> 1+longueur r;;
+
+let longueur li =
+	let rec long n l = match l with
+		[] -> n
+		| x::r -> long(n+1) r
+	in long 0 li;;
+
+let rec appartient = function e -> function li ->
+		match li with
+		[] -> false
+		| x::r -> if e=x
+			then true
+			else appartient e r;;
+
+let rec appartient = function x -> function
+	[] -> false
+	| y::r -> (x=y)||(appartient x r);;
+
+let rec appartient x = function
+	[] -> false
+	| y::r -> (x=y)||(appartient x r);;
+
+let rec reverse = function 
+	[] -> []
+	| x::r -> reverse r@[x];;
+
+"Filtrage explicite"
+let rec reverse li = match li with
+	[] -> []
+	| x::r -> reverse r@[x];;
+
+"Récursivité terminale"
+let reverse li =
+	let rec rev l lr = match l with
+		[] -> lr
+		| x::r -> rev r (x::lr)
+	in rev li [];;
+
+let pair x = (x mod 2 = 0);;
+
+let rec trouver f = function
+	[] -> failwith "non trouve"
+	| x::r -> if (f x)
+				then x
+				else trouver f r;;
+
+trouver (fun li -> li = reverse li) [[1;2;3]; [4;5]; [1;5;1]];;
+
+let appliquer f li =
+	let rec appl l lr = match l with
+		[] -> lr
+		| x::r -> appl r ((f x)::lr)
+	in appl li [];;
+
+let rec appliquer_it_d f l base =
+		match l with
+			[] -> base
+			| x::r -> f x (appliquer_it_d f r base);;
+
+let rec max min li =
+	match li with
+		[] -> min
+		| x::r -> if (x>min) then max x r
+								else max min r;;
+OU
+
+let maximum li = List.fold_right (fun x n -> if x>n then x else n) li (-1);;
+
+let som_long li = List.fold_right (fun x n -> String.length x+n) li 0;;
+
+let appliquer f l = List.fold_right (fun x lr -> f x::lr) li [];;
+
+let rec appliquer_it_g f accu li =
+	match li with
+		[] -> accu
+		| x::r -> appliquer_it_g f (f accu x) r;;
+
+let sommel li = appliquer_it_g plus 0 li;;
+
+let renv li = List.fold_left (fun lr x -> x::lr) [] li
