@@ -47,3 +47,7 @@ let lengthsumL ll =
 let lengthsumR ll =
 	List.fold_right (+) (List.map longueur ll) 0
 ;;
+
+let nb_occ a l =
+	List.fold_left (fun n x -> if x = a then n+1 else n) 0 l
+;;
