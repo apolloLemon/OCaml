@@ -215,7 +215,6 @@ let rec rTarjan graph data v =
 ;;
 
 (* Extrait les informations de data pour obtenir la liste des CFC *)
-(* Léger soucis avec cette fonction: quand les nums ne se suivent pas (ex: 1,2,4) on aura une liste vide en plus *)
 let format data =
 	let rec rFormat n max res =
 		let rec rFormat2 d li =
@@ -231,17 +230,18 @@ let format data =
 let tarjan graph =
 	let data = (init graph) in
 	match data with
-		| (vertex, i, num, seen)::t -> rTarjan graph data vertex
+		| (vertex, i, num, seen)::t -> format (rTarjan graph data vertex)
 		| [] -> failwith "Your graph doesn't have any vertex."
 ;;
 
-let graphe1 = [	(1, [2;3]);
-				(2, [6;3]);
-				(3, []);
-				(4, [1;2]);
-				(5, [2]);
-				(6, [3;1])
-]
+let graphe1 = [	(1, [6;7;8]) ;
+				(2, [1;4]) ;
+				(3, [2]) ;
+				(4, [3;5]) ;
+				(5, [1]) ;
+				(6, [5;7]) ;
+				(7, []) ;
+				(8, [6;7])]
 ;;
 
 parcours_prof graphe1;;
